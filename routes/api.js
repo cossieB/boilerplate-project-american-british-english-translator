@@ -12,8 +12,11 @@ module.exports = function (app) {
 
             if (!text) return res.json({error: 'No text to translate'})
 
-            
+            const translator = new Translator(text, locale)
 
-            console.log(req.body)
+            const translation = translator.highlight(); console.log(translation)
+
+            res.json({text, translation})
+            
         });
 };

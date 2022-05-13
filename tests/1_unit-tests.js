@@ -167,4 +167,36 @@ suite('Unit Tests', () => {
         assert.equal(translator.translate(), answer)
         done()
     })
+    test('highlight mangoes', function(done) {
+        const phrase = "Mangoes are my favorite fruit."
+        const locale = ATB
+        const translator = new Translator(phrase, locale)
+        assert.include(translator.highlight(), '<span class=\"highlight\">')
+        assert.include(translator.highlight(), '</span>')
+        done()
+    })
+    test('highlight yogurt', function(done) {
+        const phrase = "I ate yogurt for breakfast."
+        const locale = ATB
+        const translator = new Translator(phrase, locale)
+        assert.include(translator.highlight(), '<span class=\"highlight\">')
+        assert.include(translator.highlight(), '</span>')
+        done()
+    })
+    test('highlight soccer', function(done) {
+        const phrase = "We watched the footie match for a while."
+        const locale = BTA
+        const translator = new Translator(phrase, locale)
+        assert.include(translator.highlight(), '<span class=\"highlight\">')
+        assert.include(translator.highlight(), '</span>')
+        done()
+    })
+    test('highlight paracetamol', function(done) {
+        const phrase = "Paracetamol takes up to an hour to work."
+        const locale = BTA
+        const translator = new Translator(phrase, locale)
+        assert.include(translator.highlight(), '<span class=\"highlight\">')
+        assert.include(translator.highlight(), '</span>')
+        done()
+    })
 });

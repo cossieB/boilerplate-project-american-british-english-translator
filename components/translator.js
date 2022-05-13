@@ -25,7 +25,7 @@ class Translator {
         this.titles = locale === 'british-to-american' ? britishToAmericanTitles : americanToBritishTitles
     }
     translate() {
-        const translationArray = [...this.searchAndTranslate(this.titles), ...this.searchAndTranslate(this.spelling), ...this.searchAndTranslate(this.only)]
+        const translationArray = [...this.searchAndTranslate(this.titles), ...this.searchAndTranslate(this.spelling), ...this.searchAndTranslate(this.only), ...this.translateTime()]
         let translation = this.phrase
 
         translationArray.forEach(item => {
@@ -34,27 +34,55 @@ class Translator {
         })
         
         return translation
-        
     }
     searchAndTranslate(obj) {
         let matches = []
         
         for (let key in obj) {
-            let regex = new RegExp(`[^a-zA-Z]${key}[^a-zA-Z]`); let regex2 = new RegExp(`\b${key}\b`)
+            let regex = new RegExp(`[^a-zA-Z]*${key}[^a-zA-Z]`);
             
             if (regex.test(this.phrase.toLowerCase()))  {
-                matches.push({original: key, translated: obj[key]})
+                let translated = obj[key]
+                if (obj == this.titles) {
+                    translated = obj[key][0].toUpperCase() + obj[key].slice(1)
+                }
+                matches.push({original: key, translated})
             }
+        }
+
+        return matches
+    }
+    translateTime() {
+        let matches = [];
+        
+        if (this.locale == 'american-to-british' && /\d{1,2}:\d{2}/.test(this.phrase.toLowerCase())) {
+            this.phrase.match(/\d{1,2}:\d{2}/g).forEach(match => {
+                matches.push({original: match, translated: match.replace(':', '.')})
+            })
+        }
+        if (this.locale == 'british-to-american' && /\d{1,2}\.\d{2}/.test(this.phrase.toLowerCase())) {
+            this.phrase.match(/\d{1,2}\.\d{2}/g).forEach(match => {
+                matches.push({original: match, translated: match.replace('.', ':')})
+            })            
         }
         return matches
     }
+    highlight() {
+        const translationArray = [...this.searchAndTranslate(this.titles), ...this.searchAndTranslate(this.spelling), ...this.searchAndTranslate(this.only), ...this.translateTime()]
+        let translation = this.phrase
+        translationArray.forEach(item => {
+            let regex = new RegExp(`${item.original}`, 'i')
+            translation = translation.replace(regex, `<span class=\"highlight\">${item.translated}</span>`)
+        })
+        
+        return translation
+    }
 }
 
-let phrase = 'RuBe GoldBerg'
+let phrase = 'Paracetamol takes up to an hour to work 1.30.'
 
-const translator = new Translator(phrase, 'american-to-british');
+const translator = new Translator(phrase, 'british-to-american');
 
-
-console.log(/\bMr\.\b/.test('Mr. Bond'))
+console.log(translator.highlight())
 
 module.exports = Translator;
