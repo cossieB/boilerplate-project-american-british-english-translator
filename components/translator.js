@@ -26,8 +26,8 @@ class Translator {
     }
     translate() {
         const translationArray = [...this.searchAndTranslate(this.titles), ...this.searchAndTranslate(this.spelling), ...this.searchAndTranslate(this.only), ...this.translateTime()]
+        if (translationArray.length == 0) return 'Everything looks good to me!'
         let translation = this.phrase
-
         translationArray.forEach(item => {
             let regex = new RegExp(`${item.original}`, 'i')
             translation = translation.replace(regex, item.translated)
@@ -69,6 +69,7 @@ class Translator {
     }
     highlight() {
         const translationArray = [...this.searchAndTranslate(this.titles), ...this.searchAndTranslate(this.spelling), ...this.searchAndTranslate(this.only), ...this.translateTime()]
+        if (translationArray.length == 0) return 'Everything looks good to me!'
         let translation = this.phrase
         translationArray.forEach(item => {
             let regex = new RegExp(`${item.original}`, 'i')
