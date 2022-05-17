@@ -39,7 +39,7 @@ class Translator {
         let matches = []
         
         for (let key in obj) {
-            let regex = new RegExp(`[^a-zA-Z]*${key}[^a-zA-Z]`);
+            let regex = new RegExp(`(^|\\s)${key}(\\s|$|\\.)`);
             
             if (regex.test(this.phrase.toLowerCase()))  {
                 let translated = obj[key]
